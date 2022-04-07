@@ -1,6 +1,4 @@
-from cgitb import lookup
-
-from django.shortcuts import get_object_or_404, render
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import (
     CreateAPIView,
     GenericAPIView,
@@ -19,13 +17,18 @@ class ArtistView(ListAPIView, CreateAPIView, GenericAPIView):
     and allows user to create new artists.
     """
 
+    # Searching and Ordering
+    filter_backends = [OrderingFilter, SearchFilter]
+    search_fields = ["first_name", "instrument"]
+    ordering_fields = ["id", "first_name"]
+
     queryset = Artist.objects.all()
     serializer_class = ArtistSerializer
 
 
 class SingleAlbumView(RetrieveUpdateDestroyAPIView, GenericAPIView):
     """
-    An endpoint that returns the information of an album belong to a particular artist.
+    An endpoint that returns the information of an album belonging to a particular artist.
     """
 
     queryset = Album.objects.all()
